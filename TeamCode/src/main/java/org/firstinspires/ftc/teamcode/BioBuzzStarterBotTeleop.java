@@ -212,17 +212,19 @@ public class BioBuzzStarterBotTeleop extends OpMode {
         launch();
 
         /*
-         * Here we set our intake motor and servos to their intake power. The order of operations
+         * Here we set our intake motor to its intake power. The order of operations
          * here is important though. The gamepad triggers define the starting point for the intake
          * power variable in each loop of our code, but inside our launch function we also sometimes
          * change the intake power. So we need to give our launch function a chance to modify the
-         * variable before we write it to our motor and servos.
+         * variable before we write it to our motor.
          */
         // launch() can push intakePower to 1.5; keep it in the legal -1..1 range.
         intakePower = Range.clip(intakePower, -1, 1);
         intake.setPower(intakePower);
-        leftIntakeServo.setPower(intakePower);
-        rightIntakeServo.setPower(intakePower);
+
+        // Each intake servo has its own gamepad2 stick: push up to pull elements in, down to push out.
+        leftIntakeServo.setPower(-gamepad2.left_stick_y);
+        rightIntakeServo.setPower(-gamepad2.right_stick_y);
 
         /*
          * Show motor powers on the Driver Station via telemetry.
