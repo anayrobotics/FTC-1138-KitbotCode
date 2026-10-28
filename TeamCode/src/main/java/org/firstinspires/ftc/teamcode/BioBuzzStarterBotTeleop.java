@@ -222,9 +222,14 @@ public class BioBuzzStarterBotTeleop extends OpMode {
         intakePower = Range.clip(intakePower, -1, 1);
         intake.setPower(intakePower);
 
-        // Each intake servo has its own gamepad2 stick: push up to pull elements in, down to push out.
-        leftIntakeServo.setPower(-gamepad2.left_stick_y);
-        rightIntakeServo.setPower(-gamepad2.right_stick_y);
+        // gamepad2 d-pad: left/right arrow pulls in with that side's servo, down pushes both out to clear jams.
+        if (gamepad2.dpad_down) {
+            leftIntakeServo.setPower(-1);
+            rightIntakeServo.setPower(-1);
+        } else {
+            leftIntakeServo.setPower(gamepad2.dpad_left ? 1 : 0);
+            rightIntakeServo.setPower(gamepad2.dpad_right ? 1 : 0);
+        }
 
         /*
          * Show motor powers on the Driver Station via telemetry.
