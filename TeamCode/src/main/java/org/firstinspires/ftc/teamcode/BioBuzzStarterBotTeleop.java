@@ -140,7 +140,7 @@ public class BioBuzzStarterBotTeleop extends OpMode {
         }
 
         if (state != lastState) {
-            if (state == LauncherState.READY) gamepad2.rumbleBlips(1);
+            if (state == LauncherState.READY) gamepad2.rumble(1, 1, 500);
             switch (state) {
                 case OFF:         gamepad2.setLedColor(1, 0, 0, Gamepad.LED_DURATION_CONTINUOUS); break;
                 case SPINNING_UP: gamepad2.setLedColor(1, 1, 0, Gamepad.LED_DURATION_CONTINUOUS); break;
@@ -182,7 +182,7 @@ public class BioBuzzStarterBotTeleop extends OpMode {
 
         if (autoShoot && ready) {
             windmillServo.setPower(1);
-            intakePower += 0.5;
+            intakePower = 1;
         } else if (gamepad2.cross) {
             windmillServo.setPower(1);
         } else if (gamepad2.circle) {
