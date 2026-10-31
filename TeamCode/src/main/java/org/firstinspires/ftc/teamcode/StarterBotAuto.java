@@ -96,6 +96,14 @@ public class StarterBotAuto extends OpMode
     final double TICKS_PER_MM = (ENCODER_TICKS_PER_REV / (WHEEL_DIAMETER_MM * Math.PI));
     final double TRACK_WIDTH_MM = 402;
 
+    final double FEED_SECONDS = 8;
+    final double LAUNCH_TIMEOUT_SECONDS = 15;
+    // LEAVE = not touching any perimeter wall at end of AUTO; launcher faces the field, so back away 12 in.
+    final double LEAVE_DISTANCE_IN = -12;
+
+    double feedSeconds = 0;
+    double lastLoopTime = 0;
+
 
     // Create a variable to set to the intake.
     double intakePower = 0;
@@ -253,17 +261,20 @@ public class StarterBotAuto extends OpMode
          */
         // Reset each loop; launch() adds to it, and without this it would grow every loop.
         intakePower = 0;
+        double now = autoTimer.seconds();
+        double dt = now - lastLoopTime;
+        lastLoopTime = now;
         switch (autonomousState) {
             case LAUNCH:
-                launch(true);
-                if(autoTimer.seconds() > 10){
+                if (launch(true)) feedSeconds += dt;
+                if (feedSeconds >= FEED_SECONDS || now > LAUNCH_TIMEOUT_SECONDS) {
                     launch(false);
                     intakePower = 0;
                     autonomousState = AutonomousState.DRIVE;
                 }
                 break;
             case DRIVE:
-                if(drive(DRIVE_SPEED, -120, DistanceUnit.MM, 2)){
+                if(drive(DRIVE_SPEED, LEAVE_DISTANCE_IN, DistanceUnit.INCH, 1)){
                     autonomousState = AutonomousState.COMPLETE;
                 }
                 break;
@@ -284,6 +295,7 @@ public class StarterBotAuto extends OpMode
          *
          */
         telemetry.addData("AutoState", autonomousState);
+        telemetry.addData("Feed", "%.1f / %.1f s", feedSeconds, FEED_SECONDS);
         telemetry.addData("Motor Current Positions", "left (%d), right (%d)",
                 leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
         telemetry.addData("Motor Target Positions", "left (%d), right (%d)",
@@ -298,7 +310,7 @@ public class StarterBotAuto extends OpMode
     public void stop() {
     }
 
-    void launch(boolean input) {
+    boolean launch(boolean input) {
         if (input) {
             launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         } else {
@@ -308,9 +320,10 @@ public class StarterBotAuto extends OpMode
         if (input && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
             intakePower += 0.5;
-        } else {
-            windmillServo.setPower(0);
+            return true;
         }
+        windmillServo.setPower(0);
+        return false;
     }
 
     /**
