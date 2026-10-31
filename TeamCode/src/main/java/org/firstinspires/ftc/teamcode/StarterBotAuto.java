@@ -77,8 +77,8 @@ public class StarterBotAuto extends OpMode
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 1250;
-    public final int LAUNCHER_MIN_VELOCITY = 1200;
+    public final int LAUNCHER_TARGET_VELOCITY = 1350;
+    public final int LAUNCHER_MIN_VELOCITY = 1300;
 
     /*
      * Here we capture a few variables used in driving the robot. DRIVE_SPEED and ROTATE_SPEED
@@ -98,8 +98,8 @@ public class StarterBotAuto extends OpMode
 
     final double FEED_SECONDS = 8;
     final double LAUNCH_TIMEOUT_SECONDS = 15;
-    // LEAVE = not touching any perimeter wall at end of AUTO; launcher faces the field, so back away 12 in.
-    final double LEAVE_DISTANCE_IN = -12;
+    // LEAVE = not touching any perimeter wall at end of AUTO; 12 in clears it unambiguously.
+    final double LEAVE_DISTANCE_IN = 12;
 
     double feedSeconds = 0;
     double lastLoopTime = 0;
@@ -319,7 +319,7 @@ public class StarterBotAuto extends OpMode
 
         if (input && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
-            intakePower += 0.5;
+            intakePower = 1;
             return true;
         }
         windmillServo.setPower(0);

@@ -57,11 +57,11 @@ public class BioBuzzStarterBotTeleop extends OpMode {
     private DcMotorEx launcher;
     private CRServo leftIntakeServo, rightIntakeServo, windmillServo;
 
-    static final int LAUNCHER_DEFAULT_VELOCITY = 1250;
+    static final int LAUNCHER_DEFAULT_VELOCITY = 1350;
     static final int LAUNCHER_READY_MARGIN = 50;
-    static final int LAUNCHER_STEP = 50;
-    static final int LAUNCHER_MIN_TARGET = 600;
-    static final int LAUNCHER_MAX_TARGET = 2400;
+    static final int LAUNCHER_STEP = 25;
+    static final int LAUNCHER_MIN_TARGET = 1100;
+    static final int LAUNCHER_MAX_TARGET = 1400;
     static final double SLOW_MODE_SCALE = 0.4;
 
     int launcherTarget = LAUNCHER_DEFAULT_VELOCITY;
